@@ -79,4 +79,7 @@ func (st GSet) MultiRemove(data ...interface{})(int){
 	return cnt
 }
 
-//
+//清空集合
+func (st GSet) Clear(){
+	st.gSet = make(map[interface{}] bool)
+}
