@@ -14,3 +14,15 @@ GSet
     str := "apple"
     set, err := gset.NewGSet(str)
 NewGSet()传入的第一个参数，其类型指定了集合存储的元素类型
+
+方法
+----
+目前支持方法：
+* NewSet()  
+* Add()
+* Remove()
+* MultiAdd()
+* MultiRemove()
+* Size()
+* Clear()
+
