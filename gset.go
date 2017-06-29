@@ -78,6 +78,5 @@ func (st GSet) MultiDel(data ...interface{})(int){
 	}
 	return cnt
 }
-//random key
 
 //
