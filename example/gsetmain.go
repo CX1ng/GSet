@@ -16,13 +16,19 @@ func main() {
 	}
 
 	set.Insert("peach")
-	err = set.Insert(1)
+	_,err = set.Insert(1)
 
 	fmt.Println(err) //1因为不是string，所以插入失败
-	fmt.Println(set.Size())
+	fmt.Println("Size:",set.Size())
 
 	set.Del("peach")
-	fmt.Println(set.Size())
+	fmt.Println("Size:",set.Size())
 
-	fmt.Println(set.Type())
+	fmt.Println("Type:",set.Type())
+
+	set.MultiInsert("orange","banana",1, "lemon")
+	fmt.Println("Size:",set.Size())
+
+	set.MultiDel("watermelon",2, "banana")
+	fmt.Println("Size:",set.Size())
 }
