@@ -31,4 +31,7 @@ func main() {
 
 	set.MultiRemove("watermelon",2, "banana")
 	fmt.Println("Size:",set.Size())
+
+	set.Clear()
+	fmt.Println("Size:",set.Size())
 }
