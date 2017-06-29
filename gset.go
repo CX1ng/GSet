@@ -2,6 +2,7 @@ package gset
 
 import (
 	"reflect"
+	"fmt"
 )
 
 type GSet struct {
@@ -81,5 +82,9 @@ func (st GSet) MultiRemove(data ...interface{})(int){
 
 //清空集合
 func (st GSet) Clear(){
-	st.gSet = make(map[interface{}] bool)
+	//st.gSet = make(map[interface{}] bool) 这种操作不行??
+	for item := range st.gSet {
+		delete(st.gSet, item)
+		fmt.Println("delete",item)
+	}
 }
