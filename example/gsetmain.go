@@ -15,20 +15,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	set.Insert("peach")
-	_,err = set.Insert(1)
+	set.Add("peach")
+	_,err = set.Add(1)
 
 	fmt.Println(err) //1因为不是string，所以插入失败
 	fmt.Println("Size:",set.Size())
 
-	set.Del("peach")
+	set.Remove("peach")
 	fmt.Println("Size:",set.Size())
 
 	fmt.Println("Type:",set.Type())
 
-	set.MultiInsert("orange","banana",1, "lemon")
+	set.MultiAdd("orange","banana",1, "lemon")
 	fmt.Println("Size:",set.Size())
 
-	set.MultiDel("watermelon",2, "banana")
+	set.MultiRemove("watermelon",2, "banana")
 	fmt.Println("Size:",set.Size())
 }
