@@ -1,8 +1,8 @@
 package gset
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 )
 
 type GSet struct {
@@ -32,19 +32,19 @@ func (st GSet) Type() string {
 }
 
 //插入
-func (st GSet) Add(data interface{})(int, error){
+func (st GSet) Add(data interface{}) (int, error) {
 	if reflect.TypeOf(data) != st.setType {
 		return len(st.gSet), ErrTypeError
 	}
 
 	st.gSet[data] = true
-	return len(st.gSet),nil
+	return len(st.gSet), nil
 }
 
 //删除
-func (st GSet) Remove(data interface{})(int,error){
+func (st GSet) Remove(data interface{}) (int, error) {
 	if reflect.TypeOf(data) != st.setType {
-		return len(st.gSet),ErrTypeError
+		return len(st.gSet), ErrTypeError
 	}
 
 	delete(st.gSet, data)
@@ -54,9 +54,9 @@ func (st GSet) Remove(data interface{})(int,error){
 //插入多个
 //请确保参数类型与集合相同，类型不同的项不会执行插入操作
 //return: 执行插入的元素个数
-func (st GSet) MultiAdd(data ...interface{})(int){
+func (st GSet) MultiAdd(data ...interface{}) int {
 	var cnt int
-	for _, item := range data{
+	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
 			st.gSet[item] = true
 			cnt++
@@ -69,11 +69,11 @@ func (st GSet) MultiAdd(data ...interface{})(int){
 //删除多个
 //请确保参数类型与集合相同，类型不同的项不会执行删除操作
 //return: 执行删除的元素个数
-func (st GSet) MultiRemove(data ...interface{})(int){
+func (st GSet) MultiRemove(data ...interface{}) int {
 	var cnt int
-	for _, item := range data{
+	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
-			delete(st.gSet,item)
+			delete(st.gSet, item)
 			cnt++
 		}
 	}
@@ -81,10 +81,10 @@ func (st GSet) MultiRemove(data ...interface{})(int){
 }
 
 //清空集合
-func (st GSet) Clear(){
+func (st GSet) Clear() {
 	//st.gSet = make(map[interface{}] bool) 这种操作不行??
 	for item := range st.gSet {
 		delete(st.gSet, item)
-		fmt.Println("delete",item)
+		fmt.Println("delete", item)
 	}
 }
