@@ -1,10 +1,12 @@
 package gset
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type GSet struct {
 	setType reflect.Type
-	setNum  int64
+	maxNum  int64
 	gSet    map[interface{}]bool
 }
 
@@ -13,18 +15,19 @@ func NewGSet(gsetType interface{}) (*GSet, error) {
 	var gt GSet
 	gt.setType = reflect.TypeOf(gsetType)
 	gt.gSet = make(map[interface{}]bool)
+	gt.gSet[gsetType] = true
 
 	return &gt, nil
 }
 
 //获取数量
-func (st GSet) Size() int64 {
-	return st.setNum
+func (st GSet) Size() int {
+	return len(st.gSet)
 }
 
 //获取当前类型
-func (st GSet) Type() reflect.Type {
-	return st.setType
+func (st GSet) Type() string {
+	return st.setType.String()
 }
 
 //插入
@@ -43,9 +46,14 @@ func (st GSet) Del(data interface{}) error {
 		return ErrTypeError
 	}
 
-	if st.setNum > 0 {
-		st.setNum--
-		delete(st.gSet, data)
-	}
+	delete(st.gSet, data)
 	return nil
 }
+
+//random key
+
+//bulk insert
+
+//remove
+
+//
