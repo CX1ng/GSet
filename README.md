@@ -18,11 +18,15 @@ NewGSet()传入的第一个参数，其类型指定了集合存储的元素类�
 方法
 ----
 目前支持方法：
-* NewSet()  
-* Add()
-* Remove()
-* MultiAdd()
-* MultiRemove()
-* Size()
-* Clear()
+* func NewGSet(gsetType interface{}) (*GSet, error) 
+* func (st GSet) Add(data interface{}) (int, error)
+* func (st GSet) Remove(data interface{}) (int, error)
+* func (st GSet) MultiAdd(data ...interface{}) int
+* func (st GSet) MultiRemove(data ...interface{}) int
+* func (st GSet) Size() int
+* func (st GSet) Type() string
+* func (st GSet) Clear()
+* func (st GSet) Union(other GSet) (*GSet, error)
+* func (st GSet) Intersect(other GSet) (*GSet, error)
+* func (st GSet) Except(other GSet) (*GSet, error) 
 

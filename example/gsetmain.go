@@ -32,6 +32,20 @@ func main() {
 	set.MultiRemove("watermelon", 2, "banana")
 	fmt.Println("Size:", set.Size())
 
-	set.Clear()
-	fmt.Println("Size:", set.Size())
+	//set.Clear()
+	//fmt.Println("Size:", set.Size())
+
+	set2, err := NewGSet("Golang")
+
+	set2.MultiAdd("C", "Java", "C++")
+	fmt.Println("Set2 Size:", set2.Size())
+
+	setUnion, _ := set.Union(*set2)
+	fmt.Println("Set Union Size:", setUnion.Size())
+
+	setIntersect, _ := set.Intersect(*set2)
+	fmt.Println("Set Intersect Size:", setIntersect.Size())
+
+	setExcept, _ := set.Except(*set2)
+	fmt.Println("Set Except Size:", setExcept.Size())
 }

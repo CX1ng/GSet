@@ -1,7 +1,7 @@
 package gset
 
 import (
-	"fmt"
+	//"fmt"
 	"reflect"
 )
 
@@ -85,7 +85,7 @@ func (st GSet) Clear() {
 	//st.gSet = make(map[interface{}] bool) 这种操作不行??
 	for item := range st.gSet {
 		delete(st.gSet, item)
-		fmt.Println("delete", item)
+		//fmt.Println("delete", item)
 	}
 }
 
@@ -95,10 +95,7 @@ func (st GSet) Union(other GSet) (*GSet, error) {
 		return nil, ErrSetTypeError
 	}
 
-	result := GSet{
-		setType: st.setType,
-		gSet:    make(map[interface{}]bool),
-	}
+	result := newGSetParamRType(st.setType)
 
 	for key := range other.gSet {
 		result.gSet[key] = true
@@ -111,15 +108,12 @@ func (st GSet) Union(other GSet) (*GSet, error) {
 }
 
 //集合之间的交
-func (st GSet) intersect(other GSet) (*GSet, error) {
+func (st GSet) Intersect(other GSet) (*GSet, error) {
 	if other.setType != st.setType {
 		return nil, ErrSetTypeError
 	}
 
-	result := GSet{
-		setType: st.setType,
-		gSet:    make(map[interface{}]bool),
-	}
+	result := newGSetParamRType(st.setType)
 
 	for key := range other.gSet {
 		if _, ok := st.gSet[key]; ok {
@@ -131,15 +125,12 @@ func (st GSet) intersect(other GSet) (*GSet, error) {
 }
 
 //集合之间的差
-func (st GSet) except(other GSet) (*GSet, error) {
+func (st GSet) Except(other GSet) (*GSet, error) {
 	if other.setType != st.setType {
 		return nil, ErrSetTypeError
 	}
 
-	result := GSet{
-		setType: st.setType,
-		gSet:    make(map[interface{}]bool),
-	}
+	result := newGSetParamRType(st.setType)
 
 	for key := range st.gSet {
 		if _, ok := other.gSet[key]; !ok {
@@ -148,4 +139,13 @@ func (st GSet) except(other GSet) (*GSet, error) {
 	}
 
 	return &result, nil
+}
+
+//新建GSet,接受reflect.type参数
+func newGSetParamRType(setType reflect.Type) GSet {
+	gset := GSet{
+		setType: setType,
+		gSet:    make(map[interface{}]bool),
+	}
+	return gset
 }
