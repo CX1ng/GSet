@@ -9,6 +9,10 @@ GSet
 + 增加多个元素
 + 删除多个元素
 
+安装
+-----
+    go get github.com/CX1ng/GSet
+
 初始化
 -----
     str := "apple"
