@@ -88,3 +88,64 @@ func (st GSet) Clear() {
 		fmt.Println("delete", item)
 	}
 }
+
+//集合之间的并
+func (st GSet) Union(other GSet) (*GSet, error) {
+	if other.setType != st.setType {
+		return nil, ErrSetTypeError
+	}
+
+	result := GSet{
+		setType: st.setType,
+		gSet:    make(map[interface{}]bool),
+	}
+
+	for key := range other.gSet {
+		result.gSet[key] = true
+	}
+	for key := range st.gSet {
+		result.gSet[key] = true
+	}
+
+	return &result, nil
+}
+
+//集合之间的交
+func (st GSet) intersect(other GSet) (*GSet, error) {
+	if other.setType != st.setType {
+		return nil, ErrSetTypeError
+	}
+
+	result := GSet{
+		setType: st.setType,
+		gSet:    make(map[interface{}]bool),
+	}
+
+	for key := range other.gSet {
+		if _, ok := st.gSet[key]; ok {
+			result.gSet[key] = true
+		}
+	}
+
+	return &result, nil
+}
+
+//集合之间的差
+func (st GSet) except(other GSet) (*GSet, error) {
+	if other.setType != st.setType {
+		return nil, ErrSetTypeError
+	}
+
+	result := GSet{
+		setType: st.setType,
+		gSet:    make(map[interface{}]bool),
+	}
+
+	for key := range st.gSet {
+		if _, ok := other.gSet[key]; !ok {
+			result.gSet[key] = true
+		}
+	}
+
+	return &result, nil
+}
