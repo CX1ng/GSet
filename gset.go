@@ -149,3 +149,14 @@ func newGSetParamRType(setType reflect.Type) GSet {
 	}
 	return gset
 }
+
+//查询集合中是否有指定值
+func (st GSet)Exists(data interface{})(bool, error){
+	if reflect.TypeOf(data) != st.setType {
+		return false,ErrTypeError
+	}
+
+	_, ok := st.gSet[data]
+
+	return ok,nil
+}

@@ -32,5 +32,6 @@ NewGSet()传入的第一个参数，其类型指定了集合存储的元素类�
 * func (st GSet) Clear()
 * func (st GSet) Union(other GSet) (*GSet, error)
 * func (st GSet) Intersect(other GSet) (*GSet, error)
-* func (st GSet) Except(other GSet) (*GSet, error) 
+* func (st GSet) Except(other GSet) (*GSet, error)
+* func (st GSet) Exists(data interface{})(bool, error)
 
