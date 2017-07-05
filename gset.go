@@ -3,12 +3,14 @@ package gset
 import (
 	//"fmt"
 	"reflect"
+	"sync"
 )
 
 type GSet struct {
 	setType reflect.Type
 	maxNum  int64
 	gSet    map[interface{}]bool
+	lock    *sync.RWMutex
 }
 
 //初始化GSet
@@ -17,6 +19,7 @@ func NewGSet(gsetType interface{}) (*GSet, error) {
 	gt.setType = reflect.TypeOf(gsetType)
 	gt.gSet = make(map[interface{}]bool)
 	gt.gSet[gsetType] = true
+	gt.lock = new(sync.RWMutex)
 
 	return &gt, nil
 }
@@ -37,7 +40,10 @@ func (st GSet) Add(data interface{}) (int, error) {
 		return len(st.gSet), ErrTypeError
 	}
 
+	st.lock.Lock()
+	defer st.lock.Unlock()
 	st.gSet[data] = true
+
 	return len(st.gSet), nil
 }
 
@@ -47,7 +53,10 @@ func (st GSet) Remove(data interface{}) (int, error) {
 		return len(st.gSet), ErrTypeError
 	}
 
+	st.lock.Lock()
+	defer st.lock.Unlock()
 	delete(st.gSet, data)
+
 	return len(st.gSet), nil
 }
 
@@ -58,7 +67,9 @@ func (st GSet) MultiAdd(data ...interface{}) int {
 	var cnt int
 	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
+			st.lock.Lock()
 			st.gSet[item] = true
+			st.lock.Unlock()
 			cnt++
 		}
 	}
@@ -73,7 +84,9 @@ func (st GSet) MultiRemove(data ...interface{}) int {
 	var cnt int
 	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
+			st.lock.Lock()
 			delete(st.gSet, item)
+			st.lock.Unlock()
 			cnt++
 		}
 	}
@@ -83,6 +96,9 @@ func (st GSet) MultiRemove(data ...interface{}) int {
 //清空集合
 func (st GSet) Clear() {
 	//st.gSet = make(map[interface{}] bool) 这种操作不行??
+	st.lock.Lock()
+	defer st.lock.Unlock()
+
 	for item := range st.gSet {
 		delete(st.gSet, item)
 		//fmt.Println("delete", item)
@@ -97,9 +113,14 @@ func (st GSet) Union(other GSet) (*GSet, error) {
 
 	result := newGSetParamRType(st.setType)
 
+	other.lock.RLock()
+	defer other.lock.RUnlock()
 	for key := range other.gSet {
 		result.gSet[key] = true
 	}
+
+	st.lock.RLock()
+	defer st.lock.RUnlock()
 	for key := range st.gSet {
 		result.gSet[key] = true
 	}
@@ -114,6 +135,11 @@ func (st GSet) Intersect(other GSet) (*GSet, error) {
 	}
 
 	result := newGSetParamRType(st.setType)
+
+	st.lock.RLock()
+	defer st.lock.RUnlock()
+	other.lock.RLock()
+	defer other.lock.RUnlock()
 
 	for key := range other.gSet {
 		if _, ok := st.gSet[key]; ok {
@@ -132,6 +158,10 @@ func (st GSet) Except(other GSet) (*GSet, error) {
 
 	result := newGSetParamRType(st.setType)
 
+	st.lock.RLock()
+	defer st.lock.RUnlock()
+	other.lock.RLock()
+	defer other.lock.RUnlock()
 	for key := range st.gSet {
 		if _, ok := other.gSet[key]; !ok {
 			result.gSet[key] = true
@@ -146,17 +176,20 @@ func newGSetParamRType(setType reflect.Type) GSet {
 	gset := GSet{
 		setType: setType,
 		gSet:    make(map[interface{}]bool),
+		lock:    new(sync.RWMutex),
 	}
 	return gset
 }
 
 //查询集合中是否有指定值
-func (st GSet)Exists(data interface{})(bool, error){
+func (st GSet) Exists(data interface{}) (bool, error) {
 	if reflect.TypeOf(data) != st.setType {
-		return false,ErrTypeError
+		return false, ErrTypeError
 	}
 
+	st.lock.RLock()
+	defer st.lock.RUnlock()
 	_, ok := st.gSet[data]
 
-	return ok,nil
+	return ok, nil
 }
