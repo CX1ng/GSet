@@ -1,7 +1,6 @@
 package gset
 
 import (
-	//"fmt"
 	"reflect"
 	"sync"
 )
@@ -13,10 +12,24 @@ type GSet struct {
 	lock    *sync.RWMutex
 }
 
+var typeTest = []interface{}{
+	reflect.Func,
+	reflect.Array,
+	reflect.Slice,
+	reflect.Map,
+	reflect.Interface,
+}
+
 //初始化GSet
 func NewGSet(gsetType interface{}) (*GSet, error) {
 	var gt GSet
+
 	gt.setType = reflect.TypeOf(gsetType)
+	for _,tp := range typeTest{
+		if gt.setType.Kind() == tp{
+			return nil,ErrInitTypeError
+		}
+	}
 	gt.gSet = make(map[interface{}]bool)
 	gt.gSet[gsetType] = true
 	gt.lock = new(sync.RWMutex)
