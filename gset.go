@@ -25,9 +25,9 @@ func NewGSet(gsetType interface{}) (*GSet, error) {
 	var gt GSet
 
 	gt.setType = reflect.TypeOf(gsetType)
-	for _,tp := range typeTest{
-		if gt.setType.Kind() == tp{
-			return nil,ErrInitTypeError
+	for _, tp := range typeTest {
+		if gt.setType.Kind() == tp {
+			return nil, ErrInitTypeError
 		}
 	}
 	gt.gSet = make(map[interface{}]bool)
