@@ -51,7 +51,7 @@ func TestGSet_Add(t *testing.T) {
 		{func() {
 			fmt.Println("Error")
 		}, ErrTypeError},
-		{[3]int{1, 2, 3}, nil},
+		{[3]int{1, 2, 3}, ErrTypeError},
 		{"golang", nil},
 		{"c++", nil},
 	}

@@ -206,3 +206,43 @@ func (st GSet) Exists(data interface{}) (bool, error) {
 
 	return ok, nil
 }
+
+//合并切片、数组
+func (st GSet) BulkAdd(data interface{}) (int, error) {
+	if reflect.TypeOf(data).Kind() != reflect.Slice && reflect.TypeOf(data).Kind() != reflect.Array {
+		return 0, ErrArgTypeError
+	}
+
+	if reflect.TypeOf(data).Elem() != st.setType {
+		return 0, ErrTypeError
+	}
+
+	s := reflect.ValueOf(data)
+
+	st.lock.Lock()
+	defer st.lock.Unlock()
+	for i := 0; i < s.Len(); i++ {
+		st.gSet[s.Index(i)] = true
+	}
+	return s.Len(), nil
+}
+
+//切片、数组删除
+func (st GSet) BulkRemove(data interface{}) (int, error) {
+	if reflect.TypeOf(data).Kind() != reflect.Slice && reflect.TypeOf(data).Kind() != reflect.Array {
+		return 0, ErrArgTypeError
+	}
+
+	if reflect.TypeOf(data).Elem() != st.setType {
+		return 0, ErrTypeError
+	}
+
+	s := reflect.ValueOf(data)
+
+	st.lock.Lock()
+	defer st.lock.Unlock()
+	for i := 0; i < s.Len(); i++ {
+		delete(st.gSet, s.Index(i))
+	}
+	return s.Len(), nil
+}
