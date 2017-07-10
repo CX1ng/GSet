@@ -247,3 +247,14 @@ func (st GSet) BulkRemove(data interface{}) (int, error) {
 	}
 	return s.Len(), nil
 }
+
+//返回集合中全部元素
+//字符串切片类型
+func (st GSet) Keys() []string {
+	result := make([]string, 0, 10)
+	for key := range st.gSet {
+		result = append(result, key.(string))
+	}
+
+	return result
+}

@@ -58,8 +58,11 @@ func main() {
 	set.BulkAdd(testArray)
 	fmt.Println("After bulk add array:", set.Size())
 
+	fmt.Println(set.Keys())
+
 	set.BulkRemove(testSlice)
 	fmt.Println("After bulk remove slice:", set.Size())
 	set.BulkRemove(testArray)
 	fmt.Println("After bulk remove array:", set.Size())
+	fmt.Println(set.Keys())
 }
