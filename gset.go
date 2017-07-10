@@ -73,6 +73,7 @@ func (st GSet) Remove(data interface{}) (int, error) {
 	return len(st.gSet), nil
 }
 
+//传入为不支持类型则报错
 //插入多个
 //请确保参数类型与集合相同，类型不同的项不会执行插入操作
 //return: 执行插入的元素个数
@@ -222,7 +223,7 @@ func (st GSet) BulkAdd(data interface{}) (int, error) {
 	st.lock.Lock()
 	defer st.lock.Unlock()
 	for i := 0; i < s.Len(); i++ {
-		st.gSet[s.Index(i)] = true
+		st.gSet[s.Index(i).Interface()] = true
 	}
 	return s.Len(), nil
 }
@@ -242,7 +243,7 @@ func (st GSet) BulkRemove(data interface{}) (int, error) {
 	st.lock.Lock()
 	defer st.lock.Unlock()
 	for i := 0; i < s.Len(); i++ {
-		delete(st.gSet, s.Index(i))
+		delete(st.gSet, s.Index(i).Interface())
 	}
 	return s.Len(), nil
 }

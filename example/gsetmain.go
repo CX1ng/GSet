@@ -51,28 +51,15 @@ func main() {
 
 	fmt.Println("Before bulk add slice:", set.Size())
 	testSlice := []string{"Python", "R", "Ruby"}
-	_, err = set.BulkAdd(testSlice)
-	if err != nil {
-		fmt.Println(err)
-	}
+	set.BulkAdd(testSlice)
 	fmt.Println("After bulk add slice:", set.Size())
 
 	testArray := [3]string{"Scala", "Lua", "Rust"}
-	_, err = set.BulkAdd(testArray)
-	if err != nil {
-		fmt.Println(err)
-	}
+	set.BulkAdd(testArray)
 	fmt.Println("After bulk add array:", set.Size())
 
-	_, err = set.BulkRemove(testArray)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("After bulk remove array:", set.Size())
-	_, err = set.BulkRemove(testSlice)
-	if err != nil {
-		fmt.Println(err)
-	}
+	set.BulkRemove(testSlice)
 	fmt.Println("After bulk remove slice:", set.Size())
-
+	set.BulkRemove(testArray)
+	fmt.Println("After bulk remove array:", set.Size())
 }
