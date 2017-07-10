@@ -36,7 +36,3 @@ NewGSet()传入的第一个参数，其类型指定了集合存储的元素类�
 * func (st GSet) Exists(data interface{})(bool, error)
 * func (st GSet) BulkAdd(data interface{}) (int, error)
 * func (st GSet) BulkRemove(data interface{}) (int, error)
-
-Bug
-----
-BulkAdd和BulkRemove使用数组作为参数无法正常删除，添加后进行查询提示不存在key

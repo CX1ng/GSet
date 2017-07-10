@@ -250,11 +250,11 @@ func (st GSet) BulkRemove(data interface{}) (int, error) {
 
 //返回集合中全部元素
 //字符串切片类型
-func (st GSet) Keys() []string {
+func (st GSet) Keys()(int,[]string){
 	result := make([]string, 0, 10)
 	for key := range st.gSet {
 		result = append(result, key.(string))
 	}
 
-	return result
+	return len(st.gSet),result
 }
