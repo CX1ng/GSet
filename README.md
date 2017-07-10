@@ -8,6 +8,9 @@ GSet
 + 删除元素
 + 增加多个元素
 + 删除多个元素
++ 添加数组或切片
++ 删除数组或切片
++ 获取集合中全部元素
 
 安装
 -----
@@ -36,3 +39,4 @@ NewGSet()传入的第一个参数，其类型指定了集合存储的元素类�
 * func (st GSet) Exists(data interface{})(bool, error)
 * func (st GSet) BulkAdd(data interface{}) (int, error)
 * func (st GSet) BulkRemove(data interface{}) (int, error)
+* func (st GSet) Keys() (int, []string)
