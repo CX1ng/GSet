@@ -79,11 +79,17 @@ func (st GSet) Remove(data interface{}) (int, error) {
 //return: 执行插入的元素个数
 func (st GSet) MultiAdd(data ...interface{}) int {
 	var cnt int
+	for _, tp := range typeTest {
+		if st.setType.Kind() == tp {
+			return 0
+		}
+	}
+
+	st.lock.Lock()
+	defer st.lock.Unlock()
 	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
-			st.lock.Lock()
 			st.gSet[item] = true
-			st.lock.Unlock()
 			cnt++
 		}
 	}
@@ -94,8 +100,14 @@ func (st GSet) MultiAdd(data ...interface{}) int {
 //删除多个
 //请确保参数类型与集合相同，类型不同的项不会执行删除操作
 //return: 执行删除的元素个数
-func (st GSet) MultiRemove(data ...interface{}) int {
+func (st GSet) MultiRemove(data ...interface{}) (int, error) {
 	var cnt int
+	for _, tp := range typeTest {
+		if st.setType.Kind() == tp {
+			return 0, ErrInitTypeError
+		}
+	}
+
 	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
 			st.lock.Lock()
@@ -104,7 +116,7 @@ func (st GSet) MultiRemove(data ...interface{}) int {
 			cnt++
 		}
 	}
-	return cnt
+	return cnt, nil
 }
 
 //清空集合

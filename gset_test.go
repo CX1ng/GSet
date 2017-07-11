@@ -140,3 +140,74 @@ func TestGSet_Size(t *testing.T) {
 		}
 	}
 }
+
+func TestGSet_MultiAdd(t *testing.T) {
+	str := "test"
+	set, err := NewGSet(str)
+	if err != nil {
+		fmt.Println(err)
+	}
+	testExample := []struct {
+		value interface{}
+		cnt   int
+	}{
+		{"test", 1},            //字符串
+		{123, 0},               //int
+		{123.456, 0},           //float
+		{true, 0},              //bool
+		{make(chan int), 0},    //chan
+		{[]int{1, 2, 3}, 0},    //slice
+		{make(map[int]int), 0}, //map
+		{func() {
+			fmt.Println("Error")
+		}, 0},
+		{[3]int{1, 2, 3}, 0},
+		{"golang", 1},
+		{"c++", 1},
+	}
+
+	for _, test := range testExample {
+		cnt := set.MultiAdd(test.value)
+		if cnt != test.cnt {
+			t.Errorf("GSet Error, .MultiAdd()")
+		}
+	}
+
+	if cnt := set.MultiAdd("1", "2", "3"); cnt != 3 {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+	if cnt := set.MultiAdd("1", 2, "3"); cnt != 2 {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+	if cnt := set.MultiAdd(1, 2, 3); cnt != 0 {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+	if cnt := set.MultiAdd([]string{"1", "2", "3"}, []string{"4", "5"}); cnt != 0 {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+}
+
+func TestGSet_Keys(t *testing.T) {
+	str := "test"
+	set, err := NewGSet(str)
+	if err != nil {
+		fmt.Errorf("%v\n", err)
+	}
+
+	set.MultiAdd("1", "2", "3")
+
+	cnt, array := set.Keys()
+	if cnt != len(set.gSet) {
+		t.Errorf("GSet Error, .Keys()")
+	}
+
+	for _, item := range array {
+		if _, ok := set.gSet[item]; !ok {
+			t.Errorf("GSet Error, .Keys()")
+		}
+	}
+}
