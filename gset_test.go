@@ -191,6 +191,52 @@ func TestGSet_MultiAdd(t *testing.T) {
 
 }
 
+func TestGSet_MultiRemove(t *testing.T) {
+	str := "C++"
+	set, err := NewGSet(str)
+	if err != nil {
+		fmt.Println(err)
+	}
+	set.MultiAdd("Golang", "Java", "C")
+	testExample := []struct {
+		value interface{}
+		cnt   int
+	}{
+		{"test", 1},            //字符串
+		{123, 0},               //int
+		{123.456, 0},           //float
+		{true, 0},              //bool
+		{make(chan int), 0},    //chan
+		{[]int{1, 2, 3}, 0},    //slice
+		{make(map[int]int), 0}, //map
+		{func() {
+			fmt.Println("Error")
+		}, 0},
+		{[3]int{1, 2, 3}, 0},
+		{"Golang", 1},
+	}
+	for _, test := range testExample {
+		cnt, _ := set.MultiRemove(test.value)
+		if cnt != test.cnt {
+			fmt.Println(test.value, test.cnt, cnt)
+			t.Errorf("GSet Error, .MultiRemove()")
+		}
+	}
+
+	if cnt, _ := set.MultiRemove(1, 2, 3); cnt != 0 {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+	if cnt, err := set.MultiRemove([]string{"C++", "Golang"}); cnt != 0 && err != ErrInitTypeError {
+		t.Errorf("GSet Error, .MultiAdd()")
+	}
+
+	if cnt, _ := set.MultiRemove("C", "C++", 4, "Golang"); cnt != 3 {
+		t.Errorf("GSet Error, .MultiRemove()")
+	}
+
+}
+
 func TestGSet_Keys(t *testing.T) {
 	str := "test"
 	set, err := NewGSet(str)
@@ -208,6 +254,24 @@ func TestGSet_Keys(t *testing.T) {
 	for _, item := range array {
 		if _, ok := set.gSet[item]; !ok {
 			t.Errorf("GSet Error, .Keys()")
+		}
+	}
+}
+
+func TestGSet_Type(t *testing.T) {
+	testExample := []struct {
+		value interface{}
+		rtype string
+	}{
+		{"string", "string"},
+		{123, "int"},
+		{true, "bool"},
+		{123.456, "float64"},
+	}
+	for _, test := range testExample {
+		set, _ := NewGSet(test.value)
+		if rtype := set.Type(); rtype != test.rtype {
+			t.Errorf("GSet Error. .Type()")
 		}
 	}
 }

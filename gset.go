@@ -108,11 +108,11 @@ func (st GSet) MultiRemove(data ...interface{}) (int, error) {
 		}
 	}
 
+	st.lock.Lock()
+	defer st.lock.Unlock()
 	for _, item := range data {
 		if reflect.TypeOf(item) == st.setType {
-			st.lock.Lock()
 			delete(st.gSet, item)
-			st.lock.Unlock()
 			cnt++
 		}
 	}
